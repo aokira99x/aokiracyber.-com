@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOKIRA // Cyber Security Portfolio & Ethical Hacker</title>
+    <!-- Google Fonts: JetBrains Mono & Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyberBlack: '#050505',
+                        cyberDark: '#0B1220',
+                        cyberCard: '#0f172a',
+                        cyberCyan: '#00E5FF',
+                        cyberGreen: '#00FF66',
+                        cyberRed: '#FF3366',
+                        cyberGray: '#1e293b'
+                    },
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- html2pdf library for certificate download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bg-cyberBlack text-gray-300 font-mono selection:bg-cyberCyan selection:text-black overflow-x-hidden">
+
+    <!-- Scanline & CRT Overlay -->
+    <div class="scanlines"></div>
+    <div class="crt-overlay"></div>
+
+    <!-- BOOTING INTRO SCREEN -->
+    <div id="boot-screen" class="fixed inset-0 z-50 bg-cyberBlack flex flex-col justify-center px-6 md:px-20 transition-opacity duration-700">
+        <div class="max-w-3xl w-full mx-auto font-mono text-sm md:text-base space-y-2">
+            <div id="boot-text" class="text-cyberGreen"></div>
+            <div class="flex items-center space-x-2 text-cyberCyan mt-4" id="boot-cursor-line">
+                <span class="animate-pulse">_</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="fixed top-0 left-0 w-full z-40 bg-cyberBlack/80 backdrop-blur-md border-b border-cyberCyan/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="#hero" class="flex items-center space-x-3 group">
+                <div class="w-9 h-9 rounded bg-cyberDark border border-cyberCyan/50 flex items-center justify-center group-hover:border-cyberCyan shadow-[0_0_10px_rgba(0,229,255,0.3)] transition-all">
+                    <!-- Kali-inspired Dragon Icon Representation -->
+                    <i class="fa-solid fa-dragon text-cyberCyan group-hover:scale-110 transition-transform"></i>
+                </div>
+                <span class="font-bold text-lg tracking-wider text-white">AOKIRA<span class="text-cyberCyan">@SEC</span>:~#</span>
+            </a>
+            
+            <nav class="hidden md:flex items-center space-x-8 text-sm">
+                <a href="#about" class="hover:text-cyberCyan transition-colors">[01] ABOUT</a>
+                <a href="#roles" class="hover:text-cyberCyan transition-colors">[02] ROLES</a>
+                <a href="#certificate" class="hover:text-cyberCyan transition-colors">[03] CERTIFICATE</a>
+                <a href="#projects" class="hover:text-cyberCyan transition-colors">[04] PROJECTS</a>
+                <a href="#tools" class="hover:text-cyberCyan transition-colors">[05] TOOLS</a>
+                <a href="#terminal" class="hover:text-cyberCyan transition-colors">[06] CLI</a>
+                <a href="#contact" class="hover:text-cyberCyan transition-colors">[07] CONTACT</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <span class="hidden lg:inline-block text-xs px-2.5 py-1 rounded border border-cyberGreen/40 bg-cyberGreen/10 text-cyberGreen">
+                    <span class="inline-block w-2 h-2 rounded-full bg-cyberGreen animate-ping mr-1"></span> STATUS: ONLINE
+                </span>
+                <button id="mobile-menu-btn" class="md:hidden text-cyberCyan text-xl focus:outline-none">
+                    <i class="fa-solid fa-terminal"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Nav Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cyberDark/95 border-b border-cyberCyan/30 px-4 py-4 space-y-3">
+            <a href="#about" class="block text-sm hover:text-cyberCyan">[01] ABOUT</a>
+            <a href="#roles" class="block text-sm hover:text-cyberCyan">[02] ROLES</a>
+            <a href="#certificate" class="block text-sm hover:text-cyberCyan">[03] CERTIFICATE</a>
+            <a href="#projects" class="block text-sm hover:text-cyberCyan">[04] PROJECTS</a>
+            <a href="#tools" class="block text-sm hover:text-cyberCyan">[05] TOOLS</a>
+            <a href="#terminal" class="block text-sm hover:text-cyberCyan">[06] CLI</a>
+            <a href="#contact" class="block text-sm hover:text-cyberCyan">[07] CONTACT</a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-20 pb-16 overflow-hidden">
+        <!-- Matrix / Digital Canvas Background -->
+        <canvas id="matrix-canvas" class="absolute inset-0 z-0 opacity-20 pointer-events-none"></canvas>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyberBlack/80 to-cyberBlack z-0"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded bg-cyberCyan/10 border border-cyberCyan/30 text-cyberCyan text-xs">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>WELCOME TO CYBER SECURITY AOKIRA</span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight glitch-text" data-text="AOKIRA">
+                    AOKIRA
+                </h1>
+                <p class="text-cyberCyan text-sm sm:text-base font-semibold tracking-wide">
+                    Cyber Security Enthusiast | Ethical Hacker | Digital Forensics | Security Researcher
+                </p>
+                <div class="bg-cyberDark/80 border border-cyberCyan/30 p-4 rounded-lg shadow-lg text-xs sm:text-sm space-y-1.5 font-mono">
+                    <p class="text-cyberGreen">[ OK ] Initializing AOKIRA security system...</p>
+                    <p class="text-cyberGreen">[ OK ] Loading cyber modules...</p>
+                    <p class="text-cyberGreen">[ OK ] Establishing secure environment...</p>
+                    <p class="text-cyberCyan font-bold">[ OK ] Welcome to AOKIRA Cyber Security Portfolio.</p>
+                </div>
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <a href="#projects" class="px-6 py-3 rounded bg-cyberCyan text-black font-bold text-sm hover:bg-white hover:shadow-[0_0_20px_rgba(0,229,255,0.6)] transition-all">
+                        <i class="fa-solid fa-terminal mr-2"></i>Explore My Portfolio
+                    </a>
+                    <a href="#certificate" class="px-6 py-3 rounded border border-cyberCyan text-cyberCyan font-bold text-sm hover:bg-cyberCyan/10 hover:shadow-[0_0_15px_rgba(0,229,255,0.4)] transition-all">
+                        <i class="fa-solid fa-certificate mr-2"></i>View Certificate
+                    </a>
+                    <a href="#contact" class="px-6 py-3 rounded border border-gray-600 text-gray-300 font-bold text-sm hover:border-white hover:text-white transition-all">
+                        <i class="fa-solid fa-envelope mr-2"></i>Contact AOKIRA
+                    </a>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-72 h-72 sm:w-96 sm:h-96 flex items-center justify-center">
+                    <!-- Glowing Cyber Rings -->
+                    <div class="absolute inset-0 rounded-full border border-cyberCyan/30 animate-[spin_20s_linear_infinite]"></div>
+                    <div class="absolute inset-4 rounded-full border border-dashed border-cyberGreen/40 animate-[spin_15s_linear_infinite_reverse]"></div>
+                    <div class="absolute inset-8 rounded-full border border-cyberRed/20"></div>
+                    <!-- Central Logo Box -->
+                    <div class="w-48 h-48 sm:w-64 sm:h-64 rounded-2xl bg-cyberDark/90 border-2 border-cyberCyan shadow-[0_0_30px_rgba(0,229,255,0.4)] flex flex-col items-center justify-center p-6 text-center space-y-3 relative group">
+                        <div class="absolute -top-3 px-3 py-0.5 bg-cyberBlack border border-cyberCyan text-cyberCyan text-[10px] rounded tracking-widest">
+                            SECURE_NODE
+                        </div>
+                        <i class="fa-solid fa-dragon text-5xl sm:text-6xl text-cyberCyan group-hover:text-cyberGreen transition-colors drop-shadow-[0_0_15px_rgba(0,229,255,0.8)]"></i>
+                        <span class="text-white font-bold text-lg tracking-wider">AOKIRA // 0x1</span>
+                        <span class="text-[10px] text-gray-400">AUTHORIZED ACCESS ONLY</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-20 bg-cyberDark/50 border-t border-b border-cyberCyan/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center space-y-2 mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-wider">
+                    <span class="text-cyberCyan">#</span> WHO IS AOKIRA?
+                </h2>
+                <div class="w-24 h-1 bg-cyberCyan mx-auto shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="bg-cyberBlack/80 border border-cyberCyan/30 rounded-xl p-6 sm:p-8 shadow-xl relative">
+                        <div class="absolute top-0 right-0 px-3 py-1 bg-cyberCyan/10 border-l border-b border-cyberCyan/30 text-cyberCyan text-xs rounded-bl">
+                            BIO_DATA.md
+                        </div>
+                        <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                            "AOKIRA adalah identitas digital yang berfokus pada dunia cyber security, ethical hacking, analisis keamanan sistem, digital forensics, dan pengembangan tools untuk riset keamanan. Portofolio ini menjadi tempat untuk menampilkan perjalanan belajar, proyek, eksperimen di laboratorium keamanan, serta dokumentasi penelitian."
+                        </p>
+                        <div class="mt-6 pt-6 border-t border-gray-800 grid grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <span class="text-gray-500 block">BASE:</span>
+                                <span class="text-white font-semibold">SECURE_LAB_01</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 block">STATUS:</span>
+                                <span class="text-cyberGreen font-semibold">ACTIVE RESEARCHER</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Grid -->
+                <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+                    <div class="bg-cyberCard border border-cyberCyan/20 p-6 rounded-lg text-center hover:border-cyberCyan transition-all group">
+                        <i class="fa-solid fa-folder-open text-2xl text-cyberCyan mb-2 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-3xl font-bold text-white mb-1 counter" data-target="12">0</h3>
+                        <p class="text-xs text-gray-400">Security Projects</p>
+                    </div>
+                    <div class="bg-cyberCard border border-cyberGreen/20 p-6 rounded-lg text-center hover:border-cyberGreen transition-all group">
+                        <i class="fa-solid fa-flask text-2xl text-cyberGreen mb-2 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-3xl font-bold text-white mb-1 counter" data-target="24">0</h3>
+                        <p class="text-xs text-gray-400">Research & Labs</p>
+                    </div>
+                    <div class="bg-cyberCard border border-cyberCyan/20 p-6 rounded-lg text-center hover:border-cyberCyan transition-all group">
+                        <i class="fa-solid fa-screwdriver-wrench text-2xl text-cyberCyan mb-2 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-3xl font-bold text-white mb-1 counter" data-target="8">0</h3>
+                        <p class="text-xs text-gray-400">Tools Developed</p>
+                    </div>
+                    <div class="bg-cyberCard border border-cyberRed/20 p-6 rounded-lg text-center hover:border-cyberRed transition-all group">
+                        <i class="fa-solid fa-award text-2xl text-cyberRed mb-2 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-3xl font-bold text-white mb-1 counter" data-target="3">0</h3>
+                        <p class="text-xs text-gray-400">Certificates Earned</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CYBER SECURITY ROLES SECTION -->
+    <section id="roles" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center space-y-2 mb-12">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-wider">
+                    <span class="text-cyberCyan">#</span> CYBER SECURITY ROLES
+                </h2>
+                <div class="w-24 h-1 bg-cyberCyan mx-auto shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+                <p class="text-xs text-cyberRed mt-4 tracking-wide">
+                    [!] NOTE: Security testing is conducted strictly on self-owned systems or systems with explicit authorization.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Role 01 -->
+                <div class="bg-cyberDark border border-cyberCyan/30 rounded-xl p-6 sm:p-8 hover:border-cyberCyan hover:shadow-[0_0_20px_rgba(0,229,255,0.2)] transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-12 h-12 rounded-lg bg-cyberCyan/10 border border-cyberCyan/40 flex items-center justify-center text-cyberCyan text-xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-skull-crossbones"></i>
+                            </div>
+                            <span class="text-xs px-2.5 py-1 rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/30">ROLE 01</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">ATTACKER</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            "Security testing dan adversary simulation untuk memahami kerentanan sistem, menguji pertahanan, serta meningkatkan keamanan melalui penetration testing yang telah mendapatkan izin."
+                        </p>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 mb-2 uppercase tracking-wider">Skill Tags:</div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Penetration Testing</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Reconnaissance</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Vulnerability Assessment</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Red Team Fundamentals</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Web Security</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role 02 -->
+                <div class="bg-cyberDark border border-cyberGreen/30 rounded-xl p-6 sm:p-8 hover:border-cyberGreen hover:shadow-[0_0_20px_rgba(0,255,102,0.2)] transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-12 h-12 rounded-lg bg-cyberGreen/10 border border-cyberGreen/40 flex items-center justify-center text-cyberGreen text-xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            </div>
+                            <span class="text-xs px-2.5 py-1 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30">ROLE 02</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">DIGITAL FORENSICS</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            "Analisis artefak digital untuk memahami insiden keamanan, mengidentifikasi jejak aktivitas, memeriksa bukti digital, dan mendokumentasikan temuan secara sistematis."
+                        </p>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 mb-2 uppercase tracking-wider">Skill Tags:</div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Digital Forensics</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Log Analysis</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Incident Response</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">File Analysis</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Evidence Documentation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role 03 -->
+                <div class="bg-cyberDark border border-cyberRed/30 rounded-xl p-6 sm:p-8 hover:border-cyberRed hover:shadow-[0_0_20px_rgba(255,51,102,0.2)] transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-12 h-12 rounded-lg bg-cyberRed/10 border border-cyberRed/40 flex items-center justify-center text-cyberRed text-xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-bug"></i>
+                            </div>
+                            <span class="text-xs px-2.5 py-1 rounded bg-cyberRed/10 text-cyberRed border border-cyberRed/30">ROLE 03</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">MALWARE DEVELOPER</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            "Riset perilaku malware dan pengembangan sampel simulasi untuk edukasi keamanan, analisis ancaman, deteksi, serta pengujian sistem pertahanan dalam lingkungan laboratorium yang terisolasi."
+                        </p>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 mb-2 uppercase tracking-wider">Skill Tags:</div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Malware Analysis</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Reverse Engineering</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Threat Research</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Detection Engineering</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded bg-black border border-gray-700 text-gray-300">Sandboxed Lab</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CERTIFICATE SECTION -->
+    <section id="certificate" class="py-20 bg-cyberDark/40 border-t border-b border-cyberCyan/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center space-y-2 mb-12">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-wider">
+                    <span class="text-cyberCyan">#</span> AOKIRA WHITE HAT CERTIFICATE
+                </h2>
+                <div class="w-24 h-1 bg-cyberCyan mx-auto shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+                <p class="text-xs text-gray-400 mt-2">Personal Portfolio Certificate / Self-Issued Recognition (Non-Official)</p>
+            </div>
+
+            <!-- Certificate Container (Printable/Downloadable A4 Landscape style) -->
+            <div class="max-w-4xl mx-auto bg-cyberBlack border-2 border-cyberCyan rounded-2xl p-8 sm:p-12 shadow-[0_0_40px_rgba(0,229,255,0.2)] relative overflow-hidden" id="certificate-box">
+                <!-- Decorative Elements -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-cyberCyan/5 rounded-bl-full pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-cyberGreen/5 rounded-tr-full pointer-events-none"></div>
+                
+                <div class="border border-cyberCyan/40 p-6 sm:p-10 rounded-xl relative z-10 flex flex-col items-center text-center space-y-6">
+                    <div class="w-16 h-16 rounded-full bg-cyberDark border border-cyberCyan flex items-center justify-center text-cyberCyan text-3xl shadow-[0_0_15px_rgba(0,229,255,0.5)]">
+                        <i class="fa-solid fa-dragon"></i>
+                    </div>
+
+                    <div>
+                        <div class="text-xs tracking-[0.3em] text-cyberGreen uppercase font-semibold mb-1">Personal Portfolio Recognition</div>
+                        <h3 class="text-3xl sm:text-5xl font-extrabold text-white tracking-widest glitch-text" data-text="WHITE HAT">WHITE HAT</h3>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-xs text-gray-400 uppercase tracking-wider">This certificate is proudly presented to</p>
+                        <h4 class="text-2xl sm:text-4xl font-bold text-cyberCyan tracking-wide">AOKIRA</h4>
+                        <p class="text-sm text-gray-300 italic font-mono">"Cyber Security & Ethical Hacking"</p>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-gray-400 max-w-xl">
+                        Recognition of Ethical Security Research, continuous learning, laboratory experimentation, and responsible disclosure commitment.
+                    </p>
+
+                    <div class="w-full grid grid-cols-3 gap-4 pt-8 border-t border-cyberCyan/20 text-xs items-center">
+                        <div class="text-left">
+                            <span class="text-gray-500 block">CERT ID:</span>
+                            <span class="text-cyberCyan font-bold">AOKIRA-SEC-2026-X</span>
+                        </div>
+                        <div class="text-center">
+                            <i class="fa-solid fa-qrcode text-3xl text-gray-300"></i>
+                            <span class="text-[10px] text-gray-500 block mt-1">VERIFIED NODE</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-gray-500 block">ISSUED BY:</span>
+                            <span class="text-cyberGreen font-bold">AOKIRA LABS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificate Action Buttons -->
+            <div class="flex justify-center gap-4 mt-8">
+                <button onclick="downloadCertificate()" class="px-6 py-3 rounded bg-cyberCyan text-black font-bold text-sm hover:bg-white hover:shadow-[0_0_20px_rgba(0,229,255,0.6)] transition-all">
+                    <i class="fa-solid fa-file-pdf mr-2"></i>Download Certificate as PDF
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CYBER SECURITY PROJECTS SECTION -->
+    <section id="projects" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center space-y-2 mb-12">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-wider">
+                    <span class="text-cyberCyan">#</span> CYBER SECURITY PROJECTS
+                </h2>
+                <div class="w-24 h-1 bg-cyberCyan mx-auto shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+                <p class="text-xs text-gray-400 mt-2">Placeholder projects reflecting lab research and development.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="bg-cyberDark border border-cyberCyan/30 rounded-xl p-6 hover:border-cyberCyan transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs px-2 py-0.5 rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/30">LAB PROJECT</span>
+                            <span class="text-xs text-cyberGreen"><i class="fa-solid fa-circle text-[8px] mr-1"></i>ACTIVE</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyberCyan transition-colors">Vulnerability Assessment Lab</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                            Simulated network vulnerability scanning and reporting framework built in an isolated virtual environment.
+                        </p>
+                        <div class="text-[11px] text-gray-500 mb-4">
+                            <span class="text-gray-400">Tools:</span> Nmap, OpenVAS, Python
+                        </div>
+                    </div>
+                    <button onclick="openProjectModal('Vulnerability Assessment Lab', 'Simulated network vulnerability scanning and reporting framework built in an isolated virtual environment to identify misconfigurations and patch vulnerabilities.', 'Nmap, OpenVAS, Python', 'Active Lab Research')" class="w-full py-2 rounded border border-cyberCyan text-cyberCyan text-xs font-bold hover:bg-cyberCyan hover:text-black transition-all">
+                        View Details
+                    </button>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="bg-cyberDark border border-cyberGreen/30 rounded-xl p-6 hover:border-cyberGreen transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30">FORENSICS</span>
+                            <span class="text-xs text-cyberGreen"><i class="fa-solid fa-circle text-[8px] mr-1"></i>COMPLETED</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyberGreen transition-colors">Digital Forensics Investigation</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                            Memory dump analysis and disk artifact recovery workflow for incident response simulation.
+                        </p>
+                        <div class="text-[11px] text-gray-500 mb-4">
+                            <span class="text-gray-400">Tools:</span> Autopsy, Volatility, Wireshark
+                        </div>
+                    </div>
+                    <button onclick="openProjectModal('Digital Forensics Investigation', 'Memory dump analysis and disk artifact recovery workflow for incident response simulation, tracking unauthorized persistence mechanisms.', 'Autopsy, Volatility, Wireshark', 'Completed Research')" class="w-full py-2 rounded border border-cyberGreen text-cyberGreen text-xs font-bold hover:bg-cyberGreen hover:text-black transition-all">
+                        View Details
+                    </button>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="bg-cyberDark border border-cyberRed/30 rounded-xl p-6 hover:border-cyberRed transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs px-2 py-0.5 rounded bg-cyberRed/10 text-cyberRed border border-cyberRed/30">MALWARE LAB</span>
+                            <span class="text-xs text-cyberGreen"><i class="fa-solid fa-circle text-[8px] mr-1"></i>RUNNING</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyberRed transition-colors">Malware Analysis Sandbox</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                            Isolated sandbox environment for observing behavioral patterns and unpacking benign security samples.
+                        </p>
+                        <div class="text-[11px] text-gray-500 mb-4">
+                            <span class="text-gray-400">Tools:</span> Ghidra, Python, Docker
+                        </div>
+                    </div>
+                    <button onclick="openProjectModal('Malware Analysis Sandbox', 'Isolated sandbox environment for observing behavioral patterns and unpacking benign security samples in a controlled lab setting.', 'Ghidra, Python, Docker', 'Running Lab')" class="w-full py-2 rounded border border-cyberRed text-cyberRed text-xs font-bold hover:bg-cyberRed hover:text-white transition-all">
+                        View Details
+                    </button>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="bg-cyberDark border border-cyberCyan/30 rounded-xl p-6 hover:border-cyberCyan transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs px-2 py-0.5 rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/30">HARDENING</span>
+                            <span class="text-xs text-cyberGreen"><i class="fa-solid fa-circle text-[8px] mr-1"></i>STABLE</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyberCyan transition-colors">Linux Security Hardening</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                            Automated bash scripts and CIS benchmark compliance checklists for Linux server security hardening.
+                        </p>
+                        <div class="text-[11px] text-gray-500 mb-4">
+                            <span class="text-gray-400">Tools:</span> Bash, Linux CLI, Docker
+                        </div>
+                    </div>
+                    <button onclick="openProjectModal('Linux Security Hardening', 'Automated bash scripts and CIS benchmark compliance checklists for Linux server security hardening and attack surface reduction.', 'Bash, Linux CLI, Docker', 'Stable Release')" class="w-full py-2 rounded border border-cyberCyan text-cyberCyan text-xs font-bold hover:bg-cyberCyan hover:text-black transition-all">
+                        View Details
+                    </button>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="bg-cyberDark border border-cyberGreen/30 rounded-xl p-6 hover:border-cyberGreen transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30">WEB SEC</span>
+                            <span class="text-xs text-cyberGreen"><i class="fa-solid fa-circle text-[8px] mr-1"></i>ACTIVE</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyberGreen transition-colors">Web Security Testing</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                            OWASP Top 10 security testing framework and request interception scripts for local web applications.
+                        </p>
+                        <div class="text-[11px] text-gray-500 mb-4">
+                            <span class="text-gray-400">Tools:</span> Burp Suite, Python, SQLmap
+                        </div>
+                    </div>
+                    <button onclick="openProjectModal('Web Security Testing', 'OWASP Top 10 security testing framework and request interception scripts for local web applications and API security audits.', 'Burp Suite, Python, SQLmap', 'Active Testing')" class="w-full py-2 rounded border border-cyberGreen text-cyberGreen text-xs font-bold hover:bg-cyberGreen hover:text-black transition-all">
+                        View Details
+                    </button>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="bg-cyberDark border border-cyberRed/30 rounded-xl p-6 hover:border-cyberRed transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs px-2 py-0.5 rounded bg-cyberRed/10 text-cyberRed border border-cyberRed/30">CUSTOM TOOLS</span>
+                            <span class="text-xs text-cyberGreen"><i class="fa-solid fa-circle text-[8px] mr-1"></i>DEVELOPING</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyberRed transition-colors">Custom Security Tools</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                            Custom CLI utilities written in Python for automated log parsing, reconnaissance, and hash checking.
+                        </p>
+                        <div class="text-[11px] text-gray-500 mb-4">
+                            <span class="text-gray-400">Tools:</span> Python, Git, Linux
+                        </div>
+                    </div>
+                    <button onclick="openProjectModal('Custom Security Tools', 'Custom CLI utilities written in Python for automated log parsing, reconnaissance, and hash checking to streamline security workflows.', 'Python, Git, Linux', 'In Development')" class="w-full py-2 rounded border border-cyberRed text-cyberRed text-xs font-bold hover:bg-cyberRed hover:text-white transition-all">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOOLS & TECHNOLOGIES SECTION -->
+    <section id="tools" class="py-20 bg-cyberDark/50 border-t border-b border-cyberCyan/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center space-y-2 mb-12">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-wider">
+                    <span class="text-cyberCyan">#</span> TOOLS & TECHNOLOGIES
+                </h2>
+                <div class="w-24 h-1 bg-cyberCyan mx-auto shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+                <p class="text-xs text-gray-400 mt-2">Proficiency stack used in cybersecurity research and labs.</p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+                <div class="bg-cyberBlack border border-cyberCyan/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberCyan hover:shadow-[0_0_15px_rgba(0,229,255,0.3)] transition-all group">
+                    <i class="fa-solid fa-dragon text-3xl text-cyberCyan group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Kali Linux</span>
+                </div>
+                <div class="bg-cyberBlack border border-cyberGreen/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberGreen hover:shadow-[0_0_15px_rgba(0,255,102,0.3)] transition-all group">
+                    <i class="fa-solid fa-terminal text-3xl text-cyberGreen group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Linux Terminal</span>
+                </div>
+                <div class="bg-cyberBlack border border-cyberCyan/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberCyan hover:shadow-[0_0_15px_rgba(0,229,255,0.3)] transition-all group">
+                    <i class="fa-solid fa-network-wired text-3xl text-cyberCyan group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Wireshark</span>
+                </div>
+                <div class="bg-cyberBlack border border-cyberRed/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberRed hover:shadow-[0_0_15px_rgba(255,51,102,0.3)] transition-all group">
+                    <i class="fa-solid fa-radar text-3xl text-cyberRed group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Nmap</span>
+                </div>
+                <div class="bg-cyberBlack border border-cyberCyan/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberCyan hover:shadow-[0_0_15px_rgba(0,229,255,0.3)] transition-all group">
+                    <i class="fa-solid fa-globe text-3xl text-cyberCyan group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Burp Suite</span>
+                </div>
+                <div class="bg-cyberBlack border border-cyberRed/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberRed hover:shadow-[0_0_15px_rgba(255,51,102,0.3)] transition-all group">
+                    <i class="fa-solid fa-shield text-3xl text-cyberRed group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Metasploit</span>
+                </div>
+                <div class="bg-cyberBlack border border-cyberGreen/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberGreen hover:shadow-[0_0_15px_rgba(0,255,102,0.3)] transition-all group">
+                    <i class="fa-brands fa-python text-3xl text-cyberGreen group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Python</span>
+                </div>
+                <div class="bg-cyberBlack border border-cyberCyan/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberCyan hover:shadow-[0_0_15px_rgba(0,229,255,0.3)] transition-all group">
+                    <i class="fa-brands fa-git-alt text-3xl text-cyberCyan group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Git</span>
+                </div>
+                <div class="bg-cyberBlack border border-cyberCyan/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberCyan hover:shadow-[0_0_15px_rgba(0,229,255,0.3)] transition-all group">
+                    <i class="fa-brands fa-docker text-3xl text-cyberCyan group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Docker</span>
+                </div>
+                <div class="bg-cyberBlack border border-cyberGreen/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberGreen hover:shadow-[0_0_15px_rgba(0,255,102,0.3)] transition-all group">
+                    <i class="fa-solid fa-magnifying-glass text-3xl text-cyberGreen group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Autopsy</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HACKER TERMINAL SECTION -->
+    <section id="terminal" class="py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center space-y-2 mb-12">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-wider">
+                    <span class="text-cyberCyan">#</span> INTERACTIVE CLI TERMINAL
+                </h2>
+                <div class="w-24 h-1 bg-cyberCyan mx-auto shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+                <p class="text-xs text-gray-400 mt-2">Type commands below (e.g., <span class="text-cyberGreen">help</span>, <span class="text-cyberGreen">whoami</span>, <span class="text-cyberGreen">about</span>, <span class="text-cyberGreen">skills</span>, <span class="text-cyberGreen">projects</span>, <span class="text-cyberGreen">clear</span>)</p>
+            </div>
+
+            <!-- Terminal Window -->
+            <div class="bg-cyberBlack border-2 border-cyberCyan rounded-xl shadow-[0_0_30px_rgba(0,229,255,0.2)] overflow-hidden font-mono text-xs sm:text-sm">
+                <!-- Terminal Header Bar -->
+                <div class="bg-cyberDark px-4 py-3 border-b border-cyberCyan/30 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3 h-3 rounded-full bg-cyberRed inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-cyberGreen inline-block"></span>
+                        <span class="text-xs text-gray-400 ml-2 font-semibold">root@aokira:~# bash</span>
+                    </div>
+                    <span class="text-xs text-cyberGreen"><span class="inline-block w-2 h-2 rounded-full bg-cyberGreen animate-pulse mr-1"></span>SECURE_CLI</span>
+                </div>
+
+                <!-- Terminal Body -->
+                <div id="terminal-body" class="p-6 h-80 overflow-y-auto space-y-3 text-gray-300">
+                    <div class="text-cyberGreen">Last login: <span id="terminal-date"></span> on ttys001</div>
+                    <div>Type <span class="text-cyberCyan font-bold">help</span> to view available commands.</div>
+                    <div id="terminal-output"></div>
+                </div>
+
+                <!-- Terminal Input Form -->
+                <form id="terminal-form" class="bg-cyberDark/90 px-4 py-3 border-t border-cyberCyan/30 flex items-center">
+                    <span class="text-cyberGreen font-bold mr-2">root@aokira:~#</span>
+                    <input type="text" id="terminal-input" autocomplete="off" autofocus class="bg-transparent text-white focus:outline-none w-full font-mono text-xs sm:text-sm">
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT AOKIRA SECTION -->
+    <section id="contact" class="py-20 bg-cyberDark/50 border-t border-cyberCyan/10">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center space-y-2 mb-12">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-wider">
+                    <span class="text-cyberCyan">#</span> CONNECT WITH AOKIRA
+                </h2>
+                <div class="w-24 h-1 bg-cyberCyan mx-auto shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+                <p class="text-gray-400 text-sm max-w-xl mx-auto mt-4">
+                    "Interested in cybersecurity, security research, or collaboration? Let's connect and build a more secure digital world."
+                </p>
+            </div>
+
+            <!-- Contact Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+                <a href="https://github.com" target="_blank" class="bg-cyberBlack border border-cyberCyan/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberCyan hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all group">
+                    <i class="fa-brands fa-github text-3xl text-cyberCyan group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">GitHub</span>
+                    <span class="text-xs text-gray-500">github.com/aokira</span>
+                </a>
+                <a href="mailto:aokira@sec-research.local" class="bg-cyberBlack border border-cyberGreen/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberGreen hover:shadow-[0_0_20px_rgba(0,255,102,0.3)] transition-all group">
+                    <i class="fa-solid fa-envelope text-3xl text-cyberGreen group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Email</span>
+                    <span class="text-xs text-gray-500">aokira@sec.local</span>
+                </a>
+                <a href="https://linkedin.com" target="_blank" class="bg-cyberBlack border border-cyberCyan/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberCyan hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all group">
+                    <i class="fa-brands fa-linkedin text-3xl text-cyberCyan group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">LinkedIn</span>
+                    <span class="text-xs text-gray-500">linkedin.com/in/aokira</span>
+                </a>
+                <a href="https://t.me" target="_blank" class="bg-cyberBlack border border-cyberRed/30 p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-cyberRed hover:shadow-[0_0_20px_rgba(255,51,102,0.3)] transition-all group">
+                    <i class="fa-brands fa-telegram text-3xl text-cyberRed group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-bold text-white">Telegram</span>
+                    <span class="text-xs text-gray-500">t.me/aokirasec</span>
+                </a>
+            </div>
+
+            <!-- Contact Message Form -->
+            <div class="bg-cyberBlack border border-cyberCyan/30 rounded-2xl p-8 shadow-xl">
+                <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs uppercase text-cyberCyan mb-2">Your Codename / Name</label>
+                            <input type="text" required class="w-full bg-cyberDark border border-gray-700 rounded px-4 py-3 text-white text-sm focus:border-cyberCyan focus:outline-none transition-colors" placeholder="e.g., Guest_Operator">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase text-cyberCyan mb-2">Secure Email</label>
+                            <input type="email" required class="w-full bg-cyberDark border border-gray-700 rounded px-4 py-3 text-white text-sm focus:border-cyberCyan focus:outline-none transition-colors" placeholder="e.g., operator@domain.com">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase text-cyberCyan mb-2">Encrypted Message / Inquiry</label>
+                        <textarea rows="4" required class="w-full bg-cyberDark border border-gray-700 rounded px-4 py-3 text-white text-sm focus:border-cyberCyan focus:outline-none transition-colors" placeholder="State your message or collaboration inquiry..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded bg-cyberCyan text-black font-bold text-sm hover:bg-white hover:shadow-[0_0_20px_rgba(0,229,255,0.6)] transition-all">
+                        <i class="fa-solid fa-paper-plane mr-2"></i>Transmit Secure Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-cyberBlack border-t border-cyberCyan/20 py-12 text-center text-xs space-y-4">
+        <div class="text-white font-bold tracking-widest">AOKIRA // CYBER SECURITY PORTFOLIO</div>
+        <div class="text-cyberCyan tracking-wide">Learning. Researching. Securing.</div>
+        <div class="text-cyberRed font-mono">[!] Ethical hacking only. Authorized testing. Responsible disclosure.</div>
+        <div class="text-gray-500 pt-4 border-t border-gray-900 max-w-md mx-auto">
+            &copy; <span id="current-year">2026</span> AOKIRA. All rights reserved. Built with dark hacker aesthetic.
+        </div>
+    </footer>
+
+    <!-- PROJECT MODAL -->
+    <div id="project-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-cyberBlack border-2 border-cyberCyan rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-[0_0_50px_rgba(0,229,255,0.3)] relative">
+            <button onclick="closeProjectModal()" class="absolute top-4 right-4 text-cyberCyan text-xl hover:text-white">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modal-content" class="space-y-4">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript File Link -->
+    <script src="script.js"></script>
+</body>
+</html>
